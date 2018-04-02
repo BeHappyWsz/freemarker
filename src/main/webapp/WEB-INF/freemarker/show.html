@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Freemarker数据展示</title>
+</head>
+<body>
+	<div>
+		<ul>
+			<li>直接读取username:${username}
+			<li>不存在的变量/值:${nullVar!"这是个不存在的值"}
+			<li>if/elseif/else：<#if user.id lt 666> id小于666<#elseif user.id gt 777>id大于777<#else>666小于id，id小于777</#if>
+			<li>switch-case: 
+				<#switch user.username>
+					<#case "hanmeimei">
+						my name is hanmeimei
+						<#break>
+					<#case "lileilei">
+						my name is lileilei
+						<#break>
+					<#case "freemarker">
+						my name id freemarker???
+						<#break>
+					<#default>
+						no name
+				</#switch>
+			</li>
+		</ul>
+	</div>
+	<div>
+		读取User对象中的数据信息:
+		<ul>
+			<li>user.id:${user.id}
+			<li>user.username:${user.username}
+			<li>user.price:${user.price}
+			<li>user.birth:${user.birth?string("yyyy-MM-dd HH:mm:ss")}
+			<li>user.birth--
+				date:${user.birth?date}
+				time:${user.birth?time} 
+				datetime:${user.birth?datetime}
+			</li>
+		</ul>
+		<div>
+			User中的List(sep遍历中间加标识):
+			<ul>
+				<#list user.list as str>
+					<li>${str},下标索引(0开始)${str?index},下标索引(1开始)${str?counter},后续存在${str?has_next?c},最后一项${str?is_last?c} <#sep>,
+				</#list>
+			</ul>
+		</div>
+		<div>
+			User中的Set(与List类似):
+			<ul>
+				<#list user.set as i>
+					<li>${i},下标索引(0开始)${i?index},下标索引(1开始)${i?counter},后续存在${i?has_next?c},最后一项${i?is_last?c} <#sep>,
+				</#list>
+			</ul>
+		</div>
+		<div>
+			User中的Map
+			<ul>
+				<#list user.map?keys as key>
+					<li>key:${key}  value:${user.map["${key}"]}
+				</#list>
+			</ul>
+		</div>
+	</div>
+	<div>
+		<div>
+			assign创建变量:
+			<ul>
+				<li>字符串变量:<#assign ass="assign">${ass!"aa"}
+				<li>数值:<#assign num=5*5>${num}
+				<li>数组list:
+					<#assign listStr=["a","b","c"] >
+					<#list listStr as str>
+						${str}<#sep>,
+					</#list>
+				</li>
+			</ul>
+		</div>
+		<div>
+			macro宏标签
+			<ul>
+				<li><#macro test>macro标签无参数</#macro> <@test/>
+				<li><#macro macroAndParam p1 p2 p3>macro标签带参数:${p1},${p2},${p3}</#macro> <@macroAndParam p1="param1" p2="param2" p3="param3"/>
+				<li>多参数和命名参数的宏
+					<#macro img src extra...>
+						<img src="${src?html}" 
+							<#list extra?keys as attr>
+								${attr} = "${extra[attr]?html}"
+							</#list>
+						>
+					</#macro>
+					<@img src="img/pic.jpg" width=100 height=50 alt="Test"/>
+					<!-- <img alt="" src="img/pic.jpg"> -->
+				</li>
+			</ul>
+		</div>
+		<div>
+			function方法模拟Fibonacci(0 1 1 2 3 5 8):
+			<#function fac a>
+				<#if a lt 2>
+					<#return 0>
+				<#elseif a gt 4>
+					<#return 1>
+				<#else>
+					<#return fac(a-1)+fac(a-2)>
+				</#if> 
+			</#function>
+			${fac(0)}
+		</div>
+	</div>
+</body>
+</html>
